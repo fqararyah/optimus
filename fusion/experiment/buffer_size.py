@@ -17,11 +17,13 @@ from fusion.scheduling import res_parse
 from fusion.nn_models import import_network
 
 
-arch_file = './fusion/arch/3_level_mem_64Reg.json'
-dataflow_file = './fusion/dataflow/dataflow_Ow_Cout.json'
+arch_file = './fusion/arch/3_level_mem_512KB.json'
+dataflow_file = './fusion/dataflow/fareed_df.json'
+
+model_names = ['mobilenet', 'resnet50']
 
 
-def do_scheduling_optimus():
+def do_scheduling_optimus(model_name, buffers):
     """
     Get optimal scheduling for given problem. Return a result schedule.
     """
@@ -34,13 +36,14 @@ def do_scheduling_optimus():
     loop_lower_bound = LoopLowerBound.dataflow(dataflow_info)
 
     # Network.
-    batch_size.init(4)
-    network = import_network("squeezenet")
-    buffers = [16, 32, 64, 96, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024]
+    batch_size.init(1)
+    network = import_network(model_name)
+    # [16, 32, 64, 96, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024]
     access_list = []
     for bf in buffers:
         if type(arch_info["capacity"][1]) is list:
-            arch_info["capacity"][1] = [bf * 1024 / num_bytes] * len(arch_info["capacity"][1])
+            arch_info["capacity"][1] = [bf * 1024 / num_bytes] * \
+                len(arch_info["capacity"][1])
         else:
             arch_info["capacity"][1] = bf * 1024 / num_bytes
         resource = Resource.arch(arch_info)
@@ -63,7 +66,7 @@ def do_scheduling_optimus():
     return x, access_list
 
 
-def do_scheduling_dnnvm():
+def do_scheduling_dnnvm(model_name, buffers):
     """
     Get optimal scheduling for given problem. Return a result schedule.
     """
@@ -76,13 +79,14 @@ def do_scheduling_dnnvm():
     loop_lower_bound = LoopLowerBound.dataflow(dataflow_info)
 
     # Network.
-    batch_size.init(4)
-    network = import_network("squeezenet")
-    buffers = [16, 32, 64, 96, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024]
+    batch_size.init(1)
+    network = import_network(model_name)
+    #[16, 32, 64, 96, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024]
     access_list = []
     for bf in buffers:
         if type(arch_info["capacity"][1]) is list:
-            arch_info["capacity"][1] = [bf * 1024 / num_bytes] * len(arch_info["capacity"][1])
+            arch_info["capacity"][1] = [bf * 1024 / num_bytes] * \
+                len(arch_info["capacity"][1])
         else:
             arch_info["capacity"][1] = bf * 1024 / num_bytes
         resource = Resource.arch(arch_info)
@@ -92,7 +96,8 @@ def do_scheduling_dnnvm():
         cost_model = CostModel(network, resource)
 
         # optimal schedule
-        sg = ScheduleGenerator(network, resource, cost_model, loop_lower_bound, d_fusion=True, womincost=True)
+        sg = ScheduleGenerator(network, resource, cost_model,
+                               loop_lower_bound, d_fusion=True, womincost=True)
         schedule_info_list, _ = sg.schedule_search()
         print("done!\n\n")
         _, access = res_parse(schedule_info_list, resource,
@@ -105,7 +110,7 @@ def do_scheduling_dnnvm():
     return x, access_list
 
 
-def do_scheduling_efficients():
+def do_scheduling_efficients(model_name, buffers):
     """
     Get optimal scheduling for given problem. Return a result schedule.
     """
@@ -118,13 +123,14 @@ def do_scheduling_efficients():
     loop_lower_bound = LoopLowerBound.dataflow(dataflow_info)
 
     # Network.
-    batch_size.init(4)
-    network = import_network("squeezenet")
-    buffers = [16, 32, 64, 96, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024]
+    batch_size.init(1)
+    network = import_network(model_name)
+    #[16, 32, 64, 96, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024]
     access_list = []
     for bf in buffers:
         if type(arch_info["capacity"][1]) is list:
-            arch_info["capacity"][1] = [bf * 1024 / num_bytes] * len(arch_info["capacity"][1])
+            arch_info["capacity"][1] = [bf * 1024 / num_bytes] * \
+                len(arch_info["capacity"][1])
         else:
             arch_info["capacity"][1] = bf * 1024 / num_bytes
         resource = Resource.arch(arch_info)
@@ -134,7 +140,8 @@ def do_scheduling_efficients():
         cost_model = CostModel(network, resource)
 
         # optimal schedule
-        sg = ScheduleGenerator(network, resource, cost_model, loop_lower_bound, z_fusion=True, womincost=True)
+        sg = ScheduleGenerator(network, resource, cost_model,
+                               loop_lower_bound, z_fusion=True, womincost=True)
         schedule_info_list, _ = sg.schedule_search()
         print("done!\n\n")
         _, access = res_parse(schedule_info_list, resource,
@@ -147,7 +154,7 @@ def do_scheduling_efficients():
     return x, access_list
 
 
-def do_scheduling_wofusion():
+def do_scheduling_wofusion(model_name, buffers):
     """
     Get optimal scheduling for given problem. Return a result schedule.
     """
@@ -160,13 +167,15 @@ def do_scheduling_wofusion():
     loop_lower_bound = LoopLowerBound.dataflow(dataflow_info)
 
     # Network.
-    batch_size.init(4)
-    network = import_network("squeezenet")
-    buffers = [16, 32, 64, 96, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024]
+    batch_size.init(1)
+    network = import_network(model_name)
+    
+    #[16, 32, 64, 96, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024]
     access_list = []
     for bf in buffers:
         if type(arch_info["capacity"][1]) is list:
-            arch_info["capacity"][1] = [bf * 1024 / num_bytes] * len(arch_info["capacity"][1])
+            arch_info["capacity"][1] = [bf * 1024 / num_bytes] * \
+                len(arch_info["capacity"][1])
         else:
             arch_info["capacity"][1] = bf * 1024 / num_bytes
         resource = Resource.arch(arch_info)
@@ -176,7 +185,8 @@ def do_scheduling_wofusion():
         cost_model = CostModel(network, resource)
 
         # optimal schedule
-        sg = ScheduleGenerator(network, resource, cost_model, loop_lower_bound, wofusion=True)
+        sg = ScheduleGenerator(network, resource, cost_model,
+                               loop_lower_bound, wofusion=True)
         schedule_info_list, _ = sg.schedule_search()
         print("done!\n\n")
         _, access = res_parse(schedule_info_list, resource,
@@ -193,35 +203,36 @@ def main():
     """
     Main function.
     """
+    buffers = [256, 384, 512, 768, 1024]
+    for model_name in model_names:
+        plt.figure(figsize=(10, 4))
+        print('\n')
+        print("*" * 60)
+        print('HaFS:')
+        x, access_list = do_scheduling_optimus(model_name, buffers)
+        plt.plot(x, access_list, label="HaFS")
+        print('\n')
+        print("*" * 60)
+        print('Efficient-S:')
+        _, access_list = do_scheduling_efficients(model_name, buffers)
+        plt.plot(x, access_list, label="Efficient-S")
+        print('\n')
+        print("*" * 60)
+        print('DNNVM:')
+        _, access_list = do_scheduling_dnnvm(model_name, buffers)
+        plt.plot(x, access_list, label="DNNVM")
+        print('\n')
+        print("*" * 60)
+        print('w/o Fusion:')
+        _, access_list = do_scheduling_wofusion(model_name, buffers)
+        plt.plot(x, access_list, label="w/o Fusion")
 
-    plt.figure(figsize=(10, 4))
-    print('\n')
-    print("*" * 60)
-    print('HaFS:')
-    x, access_list = do_scheduling_optimus()
-    plt.plot(x, access_list, label="HaFS")
-    print('\n')
-    print("*" * 60)
-    print('Efficient-S:')
-    _, access_list = do_scheduling_efficients()
-    plt.plot(x, access_list, label="Efficient-S")
-    print('\n')
-    print("*" * 60)
-    print('DNNVM:')
-    _, access_list = do_scheduling_dnnvm()
-    plt.plot(x, access_list, label="DNNVM")
-    print('\n')
-    print("*" * 60)
-    print('w/o Fusion:')
-    _, access_list = do_scheduling_wofusion()
-    plt.plot(x, access_list, label="w/o Fusion")
-
-    plt.ylabel("DRAM access volume(GB)")
-    plt.xlabel("on-chip buffer size(KB)")
-    plt.ylim(0.0, 0.12)
-    plt.legend()
-    plt.savefig('./result/buffer_size/buffer_size.png')
-    plt.show()
+        plt.ylabel("DRAM access volume(GB)")
+        plt.xlabel("on-chip buffer size(KB)")
+        plt.ylim(0.0, 0.12)
+        plt.legend()
+        plt.savefig('./result/buffer_size/{}buffer_size.png'.format(model_name))
+        plt.show()
     return 0
 
 

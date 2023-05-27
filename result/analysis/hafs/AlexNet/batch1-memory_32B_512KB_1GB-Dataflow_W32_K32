@@ -1,0 +1,43 @@
+Network: AlexNet
+  Layer conv1_a <- None
+  Layer conv1_b <- None
+  Layer pool1_a <- conv1_a
+  Layer pool1_b <- conv1_b
+  Layer conv2_a <- pool1_a
+  Layer conv2_b <- pool1_b
+  Layer pool2_a <- conv2_a
+  Layer pool2_b <- conv2_b
+  Layer conv2_concat <- pool2_a | pool2_b
+  Layer conv3_a <- conv2_concat
+  Layer conv3_b <- conv2_concat
+  Layer conv4_a <- conv3_a
+  Layer conv4_b <- conv3_b
+  Layer conv5_a <- conv4_a
+  Layer conv5_b <- conv4_b
+  Layer pool3_a <- conv5_a
+  Layer pool3_b <- conv5_b
+
+
+arch:
+mem_levels:3
+capacity:[32.0, 524288.0, 1073741824.0]
+access_cost:[0.05, 12, 200]
+static_cost:[0, 0, 0]
+parallel_count:[1024, 1, 1]
+mac_capacity:0
+parallel_mode:[1, 0, 0]
+parallel_cost:[0.25]
+precision:8
+array_dim:None
+utilization_threshold:0.0
+replication:True
+invalid_underutilized:True
+memory_partitions:[[0, 0, 0], [0, 0, 0], [0, 0, 0], [None, None, None]]
+
+
+
+
+total DRAM access(MB): 
+2.504633903503418
+DRAM access breakdown[ifmap, ofmap, filter](MB):
+[0.20931529998779297, 0.0706787109375, 2.224639892578125]

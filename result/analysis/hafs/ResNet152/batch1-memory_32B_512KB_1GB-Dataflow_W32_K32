@@ -1,0 +1,234 @@
+Network: ResNet152
+  Layer conv1 <- None
+  Layer pool1 <- conv1
+  Layer conv2_0_a <- pool1
+  Layer conv2_0_b <- conv2_0_a
+  Layer conv2_0_c <- conv2_0_b
+  Layer conv2_br <- pool1
+  Layer conv2_0_res <- conv2_br | conv2_0_c
+  Layer conv2_1_a <- conv2_0_res
+  Layer conv2_1_b <- conv2_1_a
+  Layer conv2_1_c <- conv2_1_b
+  Layer conv2_1_res <- conv2_0_res | conv2_1_c
+  Layer conv2_2_a <- conv2_1_res
+  Layer conv2_2_b <- conv2_2_a
+  Layer conv2_2_c <- conv2_2_b
+  Layer conv2_2_res <- conv2_1_res | conv2_2_c
+  Layer conv3_0_a <- conv2_2_res
+  Layer conv3_0_b <- conv3_0_a
+  Layer conv3_0_c <- conv3_0_b
+  Layer conv3_br <- conv2_2_res
+  Layer conv3_0_res <- conv3_br | conv3_0_c
+  Layer conv3_1_a <- conv3_0_res
+  Layer conv3_1_b <- conv3_1_a
+  Layer conv3_1_c <- conv3_1_b
+  Layer conv3_1_res <- conv3_0_res | conv3_1_c
+  Layer conv3_2_a <- conv3_1_res
+  Layer conv3_2_b <- conv3_2_a
+  Layer conv3_2_c <- conv3_2_b
+  Layer conv3_2_res <- conv3_1_res | conv3_2_c
+  Layer conv3_3_a <- conv3_2_res
+  Layer conv3_3_b <- conv3_3_a
+  Layer conv3_3_c <- conv3_3_b
+  Layer conv3_3_res <- conv3_2_res | conv3_3_c
+  Layer conv3_4_a <- conv3_3_res
+  Layer conv3_4_b <- conv3_4_a
+  Layer conv3_4_c <- conv3_4_b
+  Layer conv3_4_res <- conv3_3_res | conv3_4_c
+  Layer conv3_5_a <- conv3_4_res
+  Layer conv3_5_b <- conv3_5_a
+  Layer conv3_5_c <- conv3_5_b
+  Layer conv3_5_res <- conv3_4_res | conv3_5_c
+  Layer conv3_6_a <- conv3_5_res
+  Layer conv3_6_b <- conv3_6_a
+  Layer conv3_6_c <- conv3_6_b
+  Layer conv3_6_res <- conv3_5_res | conv3_6_c
+  Layer conv3_7_a <- conv3_6_res
+  Layer conv3_7_b <- conv3_7_a
+  Layer conv3_7_c <- conv3_7_b
+  Layer conv3_7_res <- conv3_6_res | conv3_7_c
+  Layer conv4_0_a <- conv3_7_res
+  Layer conv4_0_b <- conv4_0_a
+  Layer conv4_0_c <- conv4_0_b
+  Layer conv4_br <- conv3_7_res
+  Layer conv4_0_res <- conv4_br | conv4_0_c
+  Layer conv4_1_a <- conv4_0_res
+  Layer conv4_1_b <- conv4_1_a
+  Layer conv4_1_c <- conv4_1_b
+  Layer conv4_1_res <- conv4_0_res | conv4_1_c
+  Layer conv4_2_a <- conv4_1_res
+  Layer conv4_2_b <- conv4_2_a
+  Layer conv4_2_c <- conv4_2_b
+  Layer conv4_2_res <- conv4_1_res | conv4_2_c
+  Layer conv4_3_a <- conv4_2_res
+  Layer conv4_3_b <- conv4_3_a
+  Layer conv4_3_c <- conv4_3_b
+  Layer conv4_3_res <- conv4_2_res | conv4_3_c
+  Layer conv4_4_a <- conv4_3_res
+  Layer conv4_4_b <- conv4_4_a
+  Layer conv4_4_c <- conv4_4_b
+  Layer conv4_4_res <- conv4_3_res | conv4_4_c
+  Layer conv4_5_a <- conv4_4_res
+  Layer conv4_5_b <- conv4_5_a
+  Layer conv4_5_c <- conv4_5_b
+  Layer conv4_5_res <- conv4_4_res | conv4_5_c
+  Layer conv4_6_a <- conv4_5_res
+  Layer conv4_6_b <- conv4_6_a
+  Layer conv4_6_c <- conv4_6_b
+  Layer conv4_6_res <- conv4_5_res | conv4_6_c
+  Layer conv4_7_a <- conv4_6_res
+  Layer conv4_7_b <- conv4_7_a
+  Layer conv4_7_c <- conv4_7_b
+  Layer conv4_7_res <- conv4_6_res | conv4_7_c
+  Layer conv4_8_a <- conv4_7_res
+  Layer conv4_8_b <- conv4_8_a
+  Layer conv4_8_c <- conv4_8_b
+  Layer conv4_8_res <- conv4_7_res | conv4_8_c
+  Layer conv4_9_a <- conv4_8_res
+  Layer conv4_9_b <- conv4_9_a
+  Layer conv4_9_c <- conv4_9_b
+  Layer conv4_9_res <- conv4_8_res | conv4_9_c
+  Layer conv4_10_a <- conv4_9_res
+  Layer conv4_10_b <- conv4_10_a
+  Layer conv4_10_c <- conv4_10_b
+  Layer conv4_10_res <- conv4_9_res | conv4_10_c
+  Layer conv4_11_a <- conv4_10_res
+  Layer conv4_11_b <- conv4_11_a
+  Layer conv4_11_c <- conv4_11_b
+  Layer conv4_11_res <- conv4_10_res | conv4_11_c
+  Layer conv4_12_a <- conv4_11_res
+  Layer conv4_12_b <- conv4_12_a
+  Layer conv4_12_c <- conv4_12_b
+  Layer conv4_12_res <- conv4_11_res | conv4_12_c
+  Layer conv4_13_a <- conv4_12_res
+  Layer conv4_13_b <- conv4_13_a
+  Layer conv4_13_c <- conv4_13_b
+  Layer conv4_13_res <- conv4_12_res | conv4_13_c
+  Layer conv4_14_a <- conv4_13_res
+  Layer conv4_14_b <- conv4_14_a
+  Layer conv4_14_c <- conv4_14_b
+  Layer conv4_14_res <- conv4_13_res | conv4_14_c
+  Layer conv4_15_a <- conv4_14_res
+  Layer conv4_15_b <- conv4_15_a
+  Layer conv4_15_c <- conv4_15_b
+  Layer conv4_15_res <- conv4_14_res | conv4_15_c
+  Layer conv4_16_a <- conv4_15_res
+  Layer conv4_16_b <- conv4_16_a
+  Layer conv4_16_c <- conv4_16_b
+  Layer conv4_16_res <- conv4_15_res | conv4_16_c
+  Layer conv4_17_a <- conv4_16_res
+  Layer conv4_17_b <- conv4_17_a
+  Layer conv4_17_c <- conv4_17_b
+  Layer conv4_17_res <- conv4_16_res | conv4_17_c
+  Layer conv4_18_a <- conv4_17_res
+  Layer conv4_18_b <- conv4_18_a
+  Layer conv4_18_c <- conv4_18_b
+  Layer conv4_18_res <- conv4_17_res | conv4_18_c
+  Layer conv4_19_a <- conv4_18_res
+  Layer conv4_19_b <- conv4_19_a
+  Layer conv4_19_c <- conv4_19_b
+  Layer conv4_19_res <- conv4_18_res | conv4_19_c
+  Layer conv4_20_a <- conv4_19_res
+  Layer conv4_20_b <- conv4_20_a
+  Layer conv4_20_c <- conv4_20_b
+  Layer conv4_20_res <- conv4_19_res | conv4_20_c
+  Layer conv4_21_a <- conv4_20_res
+  Layer conv4_21_b <- conv4_21_a
+  Layer conv4_21_c <- conv4_21_b
+  Layer conv4_21_res <- conv4_20_res | conv4_21_c
+  Layer conv4_22_a <- conv4_21_res
+  Layer conv4_22_b <- conv4_22_a
+  Layer conv4_22_c <- conv4_22_b
+  Layer conv4_22_res <- conv4_21_res | conv4_22_c
+  Layer conv4_23_a <- conv4_22_res
+  Layer conv4_23_b <- conv4_23_a
+  Layer conv4_23_c <- conv4_23_b
+  Layer conv4_23_res <- conv4_22_res | conv4_23_c
+  Layer conv4_24_a <- conv4_23_res
+  Layer conv4_24_b <- conv4_24_a
+  Layer conv4_24_c <- conv4_24_b
+  Layer conv4_24_res <- conv4_23_res | conv4_24_c
+  Layer conv4_25_a <- conv4_24_res
+  Layer conv4_25_b <- conv4_25_a
+  Layer conv4_25_c <- conv4_25_b
+  Layer conv4_25_res <- conv4_24_res | conv4_25_c
+  Layer conv4_26_a <- conv4_25_res
+  Layer conv4_26_b <- conv4_26_a
+  Layer conv4_26_c <- conv4_26_b
+  Layer conv4_26_res <- conv4_25_res | conv4_26_c
+  Layer conv4_27_a <- conv4_26_res
+  Layer conv4_27_b <- conv4_27_a
+  Layer conv4_27_c <- conv4_27_b
+  Layer conv4_27_res <- conv4_26_res | conv4_27_c
+  Layer conv4_28_a <- conv4_27_res
+  Layer conv4_28_b <- conv4_28_a
+  Layer conv4_28_c <- conv4_28_b
+  Layer conv4_28_res <- conv4_27_res | conv4_28_c
+  Layer conv4_29_a <- conv4_28_res
+  Layer conv4_29_b <- conv4_29_a
+  Layer conv4_29_c <- conv4_29_b
+  Layer conv4_29_res <- conv4_28_res | conv4_29_c
+  Layer conv4_30_a <- conv4_29_res
+  Layer conv4_30_b <- conv4_30_a
+  Layer conv4_30_c <- conv4_30_b
+  Layer conv4_30_res <- conv4_29_res | conv4_30_c
+  Layer conv4_31_a <- conv4_30_res
+  Layer conv4_31_b <- conv4_31_a
+  Layer conv4_31_c <- conv4_31_b
+  Layer conv4_31_res <- conv4_30_res | conv4_31_c
+  Layer conv4_32_a <- conv4_31_res
+  Layer conv4_32_b <- conv4_32_a
+  Layer conv4_32_c <- conv4_32_b
+  Layer conv4_32_res <- conv4_31_res | conv4_32_c
+  Layer conv4_33_a <- conv4_32_res
+  Layer conv4_33_b <- conv4_33_a
+  Layer conv4_33_c <- conv4_33_b
+  Layer conv4_33_res <- conv4_32_res | conv4_33_c
+  Layer conv4_34_a <- conv4_33_res
+  Layer conv4_34_b <- conv4_34_a
+  Layer conv4_34_c <- conv4_34_b
+  Layer conv4_34_res <- conv4_33_res | conv4_34_c
+  Layer conv4_35_a <- conv4_34_res
+  Layer conv4_35_b <- conv4_35_a
+  Layer conv4_35_c <- conv4_35_b
+  Layer conv4_35_res <- conv4_34_res | conv4_35_c
+  Layer conv5_0_a <- conv4_35_res
+  Layer conv5_0_b <- conv5_0_a
+  Layer conv5_0_c <- conv5_0_b
+  Layer conv5_br <- conv4_35_res
+  Layer conv5_0_res <- conv5_br | conv5_0_c
+  Layer conv5_1_a <- conv5_0_res
+  Layer conv5_1_b <- conv5_1_a
+  Layer conv5_1_c <- conv5_1_b
+  Layer conv5_1_res <- conv5_0_res | conv5_1_c
+  Layer conv5_2_a <- conv5_1_res
+  Layer conv5_2_b <- conv5_2_a
+  Layer conv5_2_c <- conv5_2_b
+  Layer conv5_2_res <- conv5_1_res | conv5_2_c
+  Layer pool5 <- conv5_2_res
+  Layer fc <- pool5
+
+
+arch:
+mem_levels:3
+capacity:[32.0, 524288.0, 1073741824.0]
+access_cost:[0.05, 12, 200]
+static_cost:[0, 0, 0]
+parallel_count:[1024, 1, 1]
+mac_capacity:0
+parallel_mode:[1, 0, 0]
+parallel_cost:[0.25]
+precision:8
+array_dim:None
+utilization_threshold:0.0
+replication:True
+invalid_underutilized:True
+memory_partitions:[[0, 0, 0], [0, 0, 0], [0, 0, 0], [None, None, None]]
+
+
+
+
+total DRAM access(MB): 
+71.77563571929932
+DRAM access breakdown[ifmap, ofmap, filter](MB):
+[7.0341796875, 6.891578674316406, 57.84987735748291]

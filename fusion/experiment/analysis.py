@@ -18,7 +18,7 @@ from fusion.nn_models import import_network
 import matplotlib.pyplot as plt
 
 
-arch_file = './fusion/arch/3_level_mem_64Reg.json'
+arch_file = './fusion/arch/3_level_mem_512KB.json'
 dataflow_file = './fusion/dataflow/dataflow_Ow_Cout.json'
 
 
@@ -35,7 +35,8 @@ def do_scheduling_optimus():
     loop_lower_bound = LoopLowerBound.dataflow(dataflow_info)
 
     # batch size = 4
-    batch_size.init(4)
+    #fareed I changed batch size to 1
+    batch_size.init(1)
     access_list = []
     for net in all_networks():
         # Network.
