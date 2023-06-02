@@ -6,7 +6,7 @@ from . import loop_enum as le
 
 
 def res_parse(schedule_info_list, resource, cost_model, sg, network,
-              loop_lower_bound, path, arch_info, others=False, is_access=False, is_print=True):
+              loop_lower_bound, path, arch_info, others=False, is_access=False, is_print=True, print_groups = False):
 
     off_chip_overall = 0
     total_cost = 0
@@ -166,6 +166,21 @@ def res_parse(schedule_info_list, resource, cost_model, sg, network,
 
             txt_writer.write('\n\nDRAM access/MAC (1e3):\n')
             txt_writer.write(str(off_chip_overall*1000/total_ops))
+
+        #fareed
+        if print_groups:
+            txt_writer.write('\n*********************fusion groups*********************\n')
+            for section_info in schedule_info_list:
+                layer_group = section_info[0]
+                txt_writer.write(str(layer_group) + '\n')
+                txt_writer.write('[')
+                for layer_name in layer_group:
+                    if layer_name in network.layer_indeices_dict:
+                        txt_writer.write(str(network.layer_indeices_dict[layer_name]))
+                txt_writer.write(']\n')
+            txt_writer.write('\n*********************fusion groups*********************\n')
+        #end fareed
+
         txt_writer.close()
 
     return energy, access

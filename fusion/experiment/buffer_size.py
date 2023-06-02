@@ -56,10 +56,20 @@ def do_scheduling_optimus(model_name, buffers):
         sg = ScheduleGenerator(network, resource, cost_model, loop_lower_bound)
         schedule_info_list, _ = sg.schedule_search()
         print("done!\n\n")
+        #fareed
+        for section_info in schedule_info_list:
+            layer_group = section_info[0]
+            print(layer_group)
+            group_str = '['
+            for layer_name in layer_group:
+                if layer_name in network.layer_indeices_dict:
+                    group_str += ' ' + str(network.layer_indeices_dict[layer_name]) + ','
+            group_str = group_str[:-1] + ']'
+            print(group_str)
         _, access = res_parse(schedule_info_list, resource,
                               cost_model, sg, network,
                               loop_lower_bound,
-                              './result/buffer_size/hafs', arch_info, is_access=True)
+                              './result/buffer_size/hafs', arch_info, is_access=True, print_groups=True)
         access_list.append(access)
     x = [str(bf) for bf in buffers]
     access_list = [access / 1024 for access in access_list]

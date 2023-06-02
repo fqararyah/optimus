@@ -221,6 +221,7 @@ class ScheduleGenerator(object):
 
         level = self.resource.buffer_levels() - 2
         s = self.resource.buffer(level).capacity * self.resource.paras[level].count
+        
         if s > layer.total_filter_size:
             is_filter_fit = True
 
@@ -250,6 +251,7 @@ class ScheduleGenerator(object):
 
         level = self.resource.buffer_levels() - 2
         s = self.resource.buffer(level).capacity * self.resource.paras[level].count
+        
         if s > layer.total_filter_size:
             is_filter_fit = True
 

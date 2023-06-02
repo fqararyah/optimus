@@ -13,6 +13,7 @@ class Network():
     def __init__(self, net_name):
         self.net_name = net_name
         self.layer_dict = OrderedDict()
+        self.layer_indeices_dict = {}
         self.prevs_dict = {}
         self.nexts_dict = {}
         self.ext_dict = OrderedDict()
@@ -73,6 +74,11 @@ class Network():
             prevs = (list(self.layer_dict.keys())[-1],)
 
         self.layer_dict[layer_name] = layer
+        #fareed
+        if 'conv' in layer_name.lower():
+            conv_layers_so_far = len(self.layer_indeices_dict)
+            self.layer_indeices_dict[layer_name] = conv_layers_so_far
+        #end fareed
         self.prevs_dict[layer_name] = prevs
 
 
