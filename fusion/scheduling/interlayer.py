@@ -429,8 +429,6 @@ class InterLayerReuse(object):
 
                 self.tile_num = math.ceil(h_m * self.network.input_layer().nimg / (b * h))
         self.q = self.fused_weight_size * self.tile_num + self.fused_input_size + self.fused_output_size
-        print(self.dag_vertex_list)
-        print(self.fused_weight_size, self.tile_num, self.fused_input_size, self.fused_output_size)
 
         if self.network.net_name != "SqueezeNet":
             p2 = self.resource.access_cost[2]

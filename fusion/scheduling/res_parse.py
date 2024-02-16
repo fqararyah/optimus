@@ -169,6 +169,30 @@ def res_parse(schedule_info_list, resource, cost_model, sg, network,
 
         #fareed
         if print_groups:
+            for section_info in schedule_info_list:
+                fusion_group, loop_blocking_list, loop_ordering_list, off_chip_access_test, is_filter_fit = section_info
+                cost_inner_list, point_list = sg.mapping(fusion_group, loop_blocking_list, loop_ordering_list)
+
+                access_list, levels_cost, noc_cost, ops, cost = cost_model.get_cost(point_list, fusion_group, is_filter_fit)
+                total_cost += cost
+
+                num_levels = resource.buffer_levels()
+
+                for i in range(num_levels):
+                    costs[i] += sum(levels_cost[i])
+                costs[3] += noc_cost
+                costs[4] += ops
+
+                off_chip_access_breakdown, off_chip_access \
+                    = access_list[2], math.ceil(reduce(add, access_list[2], 0))
+                
+                ifmap += off_chip_access_breakdown[0]
+                ofmap += off_chip_access_breakdown[1]
+                filter += off_chip_access_breakdown[2]
+                off_chip_overall += off_chip_access
+
+                print(fusion_group, is_filter_fit)
+                print('[ifmap, ofmap, filters]:', off_chip_access_breakdown)
             txt_writer.write('\n*********************fusion groups*********************\n')
             for section_info in schedule_info_list:
                 layer_group = section_info[0]
