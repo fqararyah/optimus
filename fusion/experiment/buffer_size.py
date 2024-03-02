@@ -5,7 +5,7 @@ sys.path.append(os.path.abspath('../'))
 sys.path.append(os.path.abspath('../../'))
 
 import matplotlib.pyplot as plt
-
+import time
 from fusion.scheduling import batch_size
 from fusion.scheduling import Resource
 from fusion.scheduling import LoopLowerBound
@@ -14,16 +14,17 @@ from fusion.scheduling import extract_info
 from fusion.scheduling import CostModel
 from fusion.scheduling import res_parse
 
+from fusion.nn_models import all_networks
 from fusion.nn_models import import_network
 
 
-arch_file = './fusion/arch/3_level_mem_512KB.json'
-dataflow_file = './fusion/dataflow/fareed_df.json'
+arch_file = './fusion/arch/3_level_mem_256KB.json'
+dataflow_file = './fusion/dataflow/dataflow_Ow_Cin.json'
 
-model_names = ['mobilenet', 'resnet50']
+#model_names = ['mobilenet', 'resnet50']
 
 
-def do_scheduling_optimus(model_name, buffers):
+def do_scheduling_optimus(network, buffers):
     """
     Get optimal scheduling for given problem. Return a result schedule.
     """
@@ -37,7 +38,6 @@ def do_scheduling_optimus(model_name, buffers):
 
     # Network.
     batch_size.init(1)
-    network = import_network(model_name)
     # [16, 32, 64, 96, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024]
     access_list = []
     for bf in buffers:
@@ -76,7 +76,7 @@ def do_scheduling_optimus(model_name, buffers):
     return x, access_list
 
 
-def do_scheduling_dnnvm(model_name, buffers):
+def do_scheduling_dnnvm(network, buffers):
     """
     Get optimal scheduling for given problem. Return a result schedule.
     """
@@ -90,7 +90,6 @@ def do_scheduling_dnnvm(model_name, buffers):
 
     # Network.
     batch_size.init(1)
-    network = import_network(model_name)
     #[16, 32, 64, 96, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024]
     access_list = []
     for bf in buffers:
@@ -120,7 +119,7 @@ def do_scheduling_dnnvm(model_name, buffers):
     return x, access_list
 
 
-def do_scheduling_efficients(model_name, buffers):
+def do_scheduling_efficients(network, buffers):
     """
     Get optimal scheduling for given problem. Return a result schedule.
     """
@@ -134,7 +133,7 @@ def do_scheduling_efficients(model_name, buffers):
 
     # Network.
     batch_size.init(1)
-    network = import_network(model_name)
+    
     #[16, 32, 64, 96, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024]
     access_list = []
     for bf in buffers:
@@ -164,7 +163,7 @@ def do_scheduling_efficients(model_name, buffers):
     return x, access_list
 
 
-def do_scheduling_wofusion(model_name, buffers):
+def do_scheduling_wofusion(network, buffers):
     """
     Get optimal scheduling for given problem. Return a result schedule.
     """
@@ -178,7 +177,6 @@ def do_scheduling_wofusion(model_name, buffers):
 
     # Network.
     batch_size.init(1)
-    network = import_network(model_name)
     
     #[16, 32, 64, 96, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024]
     access_list = []
@@ -213,36 +211,58 @@ def main():
     """
     Main function.
     """
-    buffers = [256, 384, 512, 768, 1024]
-    for model_name in model_names:
-        plt.figure(figsize=(10, 4))
-        print('\n')
-        print("*" * 60)
-        print('HaFS:')
-        x, access_list = do_scheduling_optimus(model_name, buffers)
-        plt.plot(x, access_list, label="HaFS")
-        print('\n')
-        print("*" * 60)
-        print('Efficient-S:')
-        _, access_list = do_scheduling_efficients(model_name, buffers)
-        plt.plot(x, access_list, label="Efficient-S")
-        print('\n')
-        print("*" * 60)
-        print('DNNVM:')
-        _, access_list = do_scheduling_dnnvm(model_name, buffers)
-        plt.plot(x, access_list, label="DNNVM")
-        print('\n')
-        print("*" * 60)
-        print('w/o Fusion:')
-        _, access_list = do_scheduling_wofusion(model_name, buffers)
-        plt.plot(x, access_list, label="w/o Fusion")
+    times = []
+    buffers = [256, 512, 1024]
+    for buffer in buffers:
+        times.append('buffer_size::' + str(buffer))
+        for net in all_networks():
+            plt.figure(figsize=(10, 4))
+            print('\n')
+            print("*" * 60)
+            print('HaFS:')
+            batch_size.init(1)
+            network = import_network(net)
+            times.append(network.net_name)
+            times.append('optimus')
+            t1 = time.time()
+            x, access_list = do_scheduling_optimus(network, [buffer])
+            times.append(time.time() - t1)
+            plt.plot(x, access_list, label="HaFS")
+            print('\n')
+            print("*" * 60)
+            print('Efficient-S:')
+            times.append('Efficient_s')
+            t1=time.time()
+            _, access_list = do_scheduling_efficients(network, [buffer])
+            times.append(time.time() - t1)
+            plt.plot(x, access_list, label="Efficient-S")
+            print('\n')
+            print("*" * 60)
+            times.append('DNNVM')
+            print('DNNVM:')
+            t1 = time.time()
+            _, access_list = do_scheduling_dnnvm(network, [buffer])
+            times.append(time.time() - t1)
+            plt.plot(x, access_list, label="DNNVM")
+            print('\n')
+            print("*" * 60)
+            print('w/o Fusion:')
+            times.append('w/o')
+            t1 = time.time()
+            _, access_list = do_scheduling_wofusion(network, [buffer])
+            times.append(time.time() - t1)
+            plt.plot(x, access_list, label="w/o Fusion")
 
-        plt.ylabel("DRAM access volume(GB)")
-        plt.xlabel("on-chip buffer size(KB)")
-        plt.ylim(0.0, 0.12)
-        plt.legend()
-        plt.savefig('./result/buffer_size/{}buffer_size.png'.format(model_name))
-        plt.show()
+            plt.ylabel("DRAM access volume(GB)")
+            plt.xlabel("on-chip buffer size(KB)")
+            plt.ylim(0.0, 0.12)
+            plt.legend()
+            plt.savefig('./result/buffer_size/{}buffer_size.png'.format(network.net_name))
+            plt.show()
+            
+    with open('./result/buffer_size/times.txt', 'w') as f:
+        for item in times:
+            f.write(str(item) + '\n')
     return 0
 
 

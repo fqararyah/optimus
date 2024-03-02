@@ -1,0 +1,50 @@
+Network: ResNet50_l10
+  Layer conv1 <- None
+  Layer conv5_0_a <- conv1
+  Layer conv5_0_b <- conv5_0_a
+  Layer conv5_0_c <- conv5_0_b
+  Layer conv5_br <- conv1
+  Layer conv5_0_res <- conv5_br | conv5_0_c
+  Layer conv5_1_a <- conv5_0_res
+  Layer conv5_1_b <- conv5_1_a
+  Layer conv5_1_c <- conv5_1_b
+  Layer conv5_1_res <- conv5_0_res | conv5_1_c
+  Layer conv5_2_a <- conv5_1_res
+  Layer conv5_2_b <- conv5_2_a
+  Layer conv5_2_c <- conv5_2_b
+  Layer conv5_2_res <- conv5_1_res | conv5_2_c
+  Layer pool5 <- conv5_2_res
+  Layer fc <- pool5
+
+
+arch:
+mem_levels:3
+capacity:[32.0, 1048576.0, 1073741824.0]
+access_cost:[0.05, 12, 200]
+static_cost:[0, 0, 0]
+parallel_count:[1024, 1, 1]
+mac_capacity:0
+parallel_mode:[1, 0, 0]
+parallel_cost:[0.25]
+precision:8
+array_dim:None
+utilization_threshold:0.0
+replication:True
+invalid_underutilized:True
+memory_partitions:[[0, 0, 0], [0, 0, 0], [0, 0, 0], [None, None, None]]
+
+
+
+
+total DRAM access(MB): 
+26.402320861816406
+DRAM access breakdown[ifmap, ofmap, filter](MB):
+[0.60009765625, 0.5990982055664062, 25.203125]
+
+total energy(1e10 pJ): 
+0.926311759995
+energy breakdown [RFs_cost, buffer_cost, DRAM_cost, noc_cost, mac_cost]: (1e10 pJ):
+[0.05167431692, 0.0366369336, 0.5536968, 0.025913283875, 0.3016228864]
+
+DRAM access/MAC (1e3):
+9.316821185282913

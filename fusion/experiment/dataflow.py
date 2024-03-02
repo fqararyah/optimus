@@ -24,7 +24,7 @@ def do_scheduling():
     name = os.listdir(dataflow_dir)
     # batch size = 4
     batch_size.init(4)
-    network = import_network("squeezenet")
+    network = import_network("resnet50")
     for rfs in [64, 512]:
         print("\n\n"+"*"*80)
         print("\nRFs: {}B/PE".format(rfs))

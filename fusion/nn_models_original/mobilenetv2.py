@@ -3,12 +3,11 @@ from fusion.scheduling import InputLayer, ConvLayer, FCLayer, PoolingLayer, DWCo
 from fusion.scheduling.batch_size import get_batch_size
 
 """
-ResNet-50
+MobileNetV2
 
-He, Zhang, Ren, and Sun, 2015
 """
 batch_size = get_batch_size()
-NN = Network('ResNet50')
+NN = Network('MobileNetV2')
 
 NN.set_input_layer(InputLayer(3, 224, nimg=batch_size))
 
@@ -30,7 +29,7 @@ NN.add('conv4_a_pw', ConvLayer(144, 24, 56, 1, 1, nimg=batch_size))
 NN.add('conv4_b_dw', DWConvLayer(144, 56, 3, 1, nimg=batch_size))
 NN.add('conv4_c_pw', ConvLayer(24, 144, 56, 1, 1, nimg=batch_size))
 NN.add('conv4_res', EltwiseLayer(24, 56, 2, nimg=batch_size),
-           prevs=(RES_PREV, 'conv4_res'))
+           prevs=(RES_PREV, 'conv4_c_pw'))
 
 #layers: 12-16
 NN.add('conv5_a_pw', ConvLayer(144, 24, 56, 1, 1, nimg=batch_size))

@@ -1,5 +1,5 @@
 {
-  "partitioning_size": [8, 8, 8],
-  "unroll_loop": [3, 4, 5],
-  "replication_loop": [0, 1, 2]
+  "partitioning_size": [8, 4, 4],
+  "unroll_loop": [3, 5, 6],
+  "replication_loop": [4, 2]
 }

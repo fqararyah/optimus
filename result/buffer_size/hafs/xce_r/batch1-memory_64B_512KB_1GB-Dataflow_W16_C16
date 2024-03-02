@@ -1,0 +1,183 @@
+Network: MobileNetV2
+  Layer conv1 <- None
+  Layer conv2 <- conv1
+  Layer conv3_a_dw <- conv2
+  Layer conv3_b_pw <- conv3_a_dw
+  Layer conv3_c_dw <- conv3_b_pw
+  Layer conv3_d_pw <- conv3_c_dw
+  Layer pool1 <- conv3_d_pw
+  Layer conv3_e_pw <- conv2
+  Layer conv3_res <- pool1 | conv3_e_pw
+  Layer conv4_a_dw <- conv3_res
+  Layer conv4_b_pw <- conv4_a_dw
+  Layer conv4_c_dw <- conv4_b_pw
+  Layer conv4_d_pw <- conv4_c_dw
+  Layer pool2 <- conv4_d_pw
+  Layer conv4_e_pw <- conv3_res
+  Layer conv4_res <- pool2 | conv4_e_pw
+  Layer conv5_a_dw <- conv4_res
+  Layer conv5_b_pw <- conv5_a_dw
+  Layer conv5_c_dw <- conv5_b_pw
+  Layer conv5_d_pw <- conv5_c_dw
+  Layer pool3 <- conv5_d_pw
+  Layer conv5_e_pw <- conv4_res
+  Layer conv5_res <- pool3 | conv5_e_pw
+  Layer conv6_a_dw <- conv5_res
+  Layer conv6_b_pw <- conv6_a_dw
+  Layer conv6_c_dw <- conv6_b_pw
+  Layer conv6_d_pw <- conv6_c_dw
+  Layer conv6_e_dw <- conv6_d_pw
+  Layer conv6_f_pw <- conv6_e_dw
+  Layer conv6_res <- conv5_res | conv6_f_pw
+  Layer conv7_a_dw <- conv6_res
+  Layer conv7_b_pw <- conv7_a_dw
+  Layer conv7_c_dw <- conv7_b_pw
+  Layer conv7_d_pw <- conv7_c_dw
+  Layer conv7_e_dw <- conv7_d_pw
+  Layer conv7_f_pw <- conv7_e_dw
+  Layer conv7_res <- conv6_res | conv7_f_pw
+  Layer conv8_a_dw <- conv7_res
+  Layer conv8_b_pw <- conv8_a_dw
+  Layer conv8_c_dw <- conv8_b_pw
+  Layer conv8_d_pw <- conv8_c_dw
+  Layer conv8_e_dw <- conv8_d_pw
+  Layer conv8_f_pw <- conv8_e_dw
+  Layer conv8_res <- conv7_res | conv8_f_pw
+  Layer conv9_a_dw <- conv8_res
+  Layer conv9_b_pw <- conv9_a_dw
+  Layer conv9_c_dw <- conv9_b_pw
+  Layer conv9_d_pw <- conv9_c_dw
+  Layer conv9_e_dw <- conv9_d_pw
+  Layer conv9_f_pw <- conv9_e_dw
+  Layer conv9_res <- conv8_res | conv9_f_pw
+  Layer conv10_a_dw <- conv9_res
+  Layer conv10_b_pw <- conv10_a_dw
+  Layer conv10_c_dw <- conv10_b_pw
+  Layer conv10_d_pw <- conv10_c_dw
+  Layer conv10_e_dw <- conv10_d_pw
+  Layer conv10_f_pw <- conv10_e_dw
+  Layer conv10_res <- conv9_res | conv10_f_pw
+  Layer conv11_a_dw <- conv10_res
+  Layer conv11_b_pw <- conv11_a_dw
+  Layer conv11_c_dw <- conv11_b_pw
+  Layer conv11_d_pw <- conv11_c_dw
+  Layer conv11_e_dw <- conv11_d_pw
+  Layer conv11_f_pw <- conv11_e_dw
+  Layer conv11_res <- conv10_res | conv11_f_pw
+  Layer conv12_a_dw <- conv11_res
+  Layer conv12_b_pw <- conv12_a_dw
+  Layer conv12_c_dw <- conv12_b_pw
+  Layer conv12_d_pw <- conv12_c_dw
+  Layer conv12_e_dw <- conv12_d_pw
+  Layer conv12_f_pw <- conv12_e_dw
+  Layer conv12_res <- conv11_res | conv12_f_pw
+  Layer conv13_a_dw <- conv12_res
+  Layer conv13_b_pw <- conv13_a_dw
+  Layer conv13_c_dw <- conv13_b_pw
+  Layer conv13_d_pw <- conv13_c_dw
+  Layer conv13_e_dw <- conv13_d_pw
+  Layer conv13_f_pw <- conv13_e_dw
+  Layer conv13_res <- conv12_res | conv13_f_pw
+  Layer conv14_a_dw <- conv13_res
+  Layer conv14_b_pw <- conv14_a_dw
+  Layer conv14_c_dw <- conv14_b_pw
+  Layer conv14_d_pw <- conv14_c_dw
+  Layer pool4 <- conv14_d_pw
+  Layer conv14_e_pw <- conv13_res
+  Layer conv14_res <- pool4 | conv14_e_pw
+  Layer conv15_a_dw <- conv14_res
+  Layer conv15_b_pw <- conv15_a_dw
+  Layer conv15_c_dw <- conv15_b_pw
+  Layer conv15_d_pw <- conv15_c_dw
+  Layer pool5 <- conv15_d_pw
+  Layer fc <- pool5
+
+
+arch:
+mem_levels:3
+capacity:[64.0, 524288.0, 1073741824.0]
+access_cost:[0.1, 9, 200]
+static_cost:[0, 0, 0]
+parallel_count:[256, 1, 1]
+mac_capacity:0
+parallel_mode:[1, 0, 0]
+parallel_cost:[0.25]
+precision:8
+array_dim:None
+utilization_threshold:0.0
+replication:True
+invalid_underutilized:True
+memory_partitions:[[0, 0, 0], [0, 0, 0], [0, 0, 0], [None, None, None]]
+
+
+
+
+total DRAM access(MB): 
+27.62086296081543
+DRAM access breakdown[ifmap, ofmap, filter](MB):
+[3.43231201171875, 3.2473831176757812, 20.9411678314209]
+*********************fusion groups*********************
+['conv1', 'conv2', 'conv3_a_dw', 'conv3_b_pw', 'conv3_c_dw', 'conv3_d_pw', 'pool1', 'conv3_e_pw', 'conv3_res', 'conv4_e_pw']
+[0123456712]
+['conv4_a_dw']
+[8]
+['conv4_b_pw', 'conv4_c_dw', 'conv4_d_pw', 'pool2']
+[91011]
+['conv4_res']
+[13]
+['conv5_a_dw']
+[14]
+['conv5_e_pw', 'conv5_b_pw', 'conv5_c_dw', 'conv5_d_pw', 'pool3', 'conv5_res']
+[1815161719]
+['conv6_a_dw']
+[20]
+['conv6_b_pw', 'conv6_c_dw', 'conv6_d_pw', 'conv6_e_dw']
+[21222324]
+['conv6_f_pw', 'conv6_res', 'conv7_a_dw', 'conv7_b_pw', 'conv7_c_dw']
+[2526272829]
+['conv7_d_pw', 'conv7_e_dw', 'conv7_f_pw']
+[303132]
+['conv7_res']
+[33]
+['conv8_a_dw']
+[34]
+['conv8_b_pw', 'conv8_c_dw', 'conv8_d_pw', 'conv8_e_dw']
+[35363738]
+['conv8_f_pw', 'conv8_res', 'conv9_a_dw', 'conv9_b_pw', 'conv9_c_dw']
+[3940414243]
+['conv9_d_pw', 'conv9_e_dw', 'conv9_f_pw']
+[444546]
+['conv9_res']
+[47]
+['conv10_a_dw']
+[48]
+['conv10_b_pw', 'conv10_c_dw', 'conv10_d_pw', 'conv10_e_dw']
+[49505152]
+['conv10_f_pw', 'conv10_res', 'conv11_a_dw', 'conv11_b_pw', 'conv11_c_dw']
+[5354555657]
+['conv11_d_pw', 'conv11_e_dw', 'conv11_f_pw']
+[585960]
+['conv11_res']
+[61]
+['conv12_a_dw']
+[62]
+['conv12_b_pw', 'conv12_c_dw', 'conv12_d_pw', 'conv12_e_dw']
+[63646566]
+['conv12_f_pw', 'conv12_res', 'conv13_a_dw', 'conv13_b_pw', 'conv13_c_dw']
+[6768697071]
+['conv13_d_pw', 'conv13_e_dw', 'conv13_f_pw']
+[727374]
+['conv13_res']
+[75]
+['conv14_a_dw']
+[76]
+['conv14_e_pw', 'conv14_b_pw', 'conv14_c_dw', 'conv14_d_pw', 'pool4', 'conv14_res', 'conv15_a_dw', 'conv15_b_pw', 'conv15_c_dw']
+[8077787981828384]
+['conv15_d_pw']
+[85]
+['pool5']
+[]
+['fc']
+[]
+
+*********************fusion groups*********************

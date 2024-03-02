@@ -1,0 +1,63 @@
+Network: MobileNet
+  Layer conv1 <- None
+  Layer conv2_1_dw <- conv1
+  Layer conv2_1_pw <- conv2_1_dw
+  Layer conv2_2_dw <- conv2_1_pw
+  Layer conv2_2_pw <- conv2_2_dw
+  Layer conv3_1_dw <- conv2_2_pw
+  Layer conv3_1_pw <- conv3_1_dw
+  Layer conv3_2_dw <- conv3_1_pw
+  Layer conv3_2_pw <- conv3_2_dw
+  Layer conv4_1_dw <- conv3_2_pw
+  Layer conv4_1_pw <- conv4_1_dw
+  Layer conv4_2_dw <- conv4_1_pw
+  Layer conv4_2_pw <- conv4_2_dw
+  Layer conv5_1_dw <- conv4_2_pw
+  Layer conv5_1_pw <- conv5_1_dw
+  Layer conv5_2_dw <- conv5_1_pw
+  Layer conv5_2_pw <- conv5_2_dw
+  Layer conv5_3_dw <- conv5_2_pw
+  Layer conv5_3_pw <- conv5_3_dw
+  Layer conv5_4_dw <- conv5_3_pw
+  Layer conv5_4_pw <- conv5_4_dw
+  Layer conv5_5_dw <- conv5_4_pw
+  Layer conv5_5_pw <- conv5_5_dw
+  Layer conv5_6_dw <- conv5_5_pw
+  Layer conv5_6_pw <- conv5_6_dw
+  Layer conv6_dw <- conv5_6_pw
+  Layer conv6_pw <- conv6_dw
+  Layer pool6 <- conv6_pw
+  Layer fc <- pool6
+
+
+arch:
+mem_levels:3
+capacity:[64.0, 262144.0, 1073741824.0]
+access_cost:[0.1, 9, 200]
+static_cost:[0, 0, 0]
+parallel_count:[256, 1, 1]
+mac_capacity:0
+parallel_mode:[1, 0, 0]
+parallel_cost:[0.25]
+precision:8
+array_dim:None
+utilization_threshold:0.0
+replication:True
+invalid_underutilized:True
+memory_partitions:[[0, 0, 0], [0, 0, 0], [0, 0, 0], [None, None, None]]
+
+
+
+
+total DRAM access(MB): 
+5.768901824951172
+DRAM access breakdown[ifmap, ofmap, filter](MB):
+[0.8393898010253906, 0.9579849243164062, 3.971527099609375]
+
+total energy(1e10 pJ): 
+0.225118422
+energy breakdown [RFs_cost, buffer_cost, DRAM_cost, noc_cost, mac_cost]: (1e10 pJ):
+[0.022023055600000004, 0.0240870951, 0.12098264, 0.0028901945, 0.9067429888]
+
+DRAM access/MAC (1e3):
+9.540352063754204

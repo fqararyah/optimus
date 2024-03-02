@@ -1,0 +1,69 @@
+Network: VGG
+  Layer conv1 <- None
+  Layer conv2 <- conv1
+  Layer pool1 <- conv2
+  Layer conv3 <- pool1
+  Layer conv4 <- conv3
+  Layer pool2 <- conv4
+  Layer conv5 <- pool2
+  Layer conv6 <- conv5
+  Layer conv7 <- conv6
+  Layer pool3 <- conv7
+  Layer conv8 <- pool3
+  Layer conv9 <- conv8
+  Layer conv10 <- conv9
+  Layer pool4 <- conv10
+  Layer conv11 <- pool4
+  Layer conv12 <- conv11
+  Layer conv13 <- conv12
+  Layer pool5 <- conv13
+
+
+arch:
+mem_levels:3
+capacity:[64.0, 262144.0, 1073741824.0]
+access_cost:[0.1, 9, 200]
+static_cost:[0, 0, 0]
+parallel_count:[256, 1, 1]
+mac_capacity:0
+parallel_mode:[1, 0, 0]
+parallel_cost:[0.25]
+precision:8
+array_dim:None
+utilization_threshold:0.0
+replication:True
+invalid_underutilized:True
+memory_partitions:[[0, 0, 0], [0, 0, 0], [0, 0, 0], [None, None, None]]
+
+
+
+
+total DRAM access(MB): 
+30.63007164001465
+DRAM access breakdown[ifmap, ofmap, filter](MB):
+[7.595598220825195, 6.448188781738281, 16.586284637451172]
+*********************fusion groups*********************
+['conv1']
+[0]
+['conv2', 'pool1']
+[1]
+['conv3', 'conv4', 'pool2']
+[23]
+['conv5']
+[4]
+['conv6', 'conv7', 'pool3']
+[56]
+['conv8']
+[7]
+['conv9']
+[8]
+['conv10']
+[9]
+['pool4']
+[]
+['conv11', 'conv12']
+[1011]
+['conv13', 'pool5']
+[12]
+
+*********************fusion groups*********************

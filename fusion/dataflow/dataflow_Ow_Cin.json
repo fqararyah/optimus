@@ -1,5 +1,5 @@
 {
-  "partitioning_size": [32, 32],
+  "partitioning_size": [16, 16],
   "unroll_loop": [3, 2],
   "replication_loop": [4, 5]
 }
