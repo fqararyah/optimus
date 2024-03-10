@@ -1,0 +1,12 @@
+buffer_size::256
+ResNet50_l25
+w/o
+87.75136590003967
+buffer_size::512
+ResNet50_l25
+w/o
+238.6707718372345
+buffer_size::1024
+ResNet50_l25
+w/o
+336.07610297203064

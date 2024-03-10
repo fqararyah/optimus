@@ -1,0 +1,49 @@
+Network: xce_r_f17
+  Layer conv1 <- None
+  Layer conv2 <- conv1
+  Layer conv3_a_dw <- conv2
+  Layer conv3_b_pw <- conv3_a_dw
+  Layer conv3_c_dw <- conv3_b_pw
+  Layer conv3_d_pw <- conv3_c_dw
+  Layer pool1 <- conv3_d_pw
+  Layer conv3_e_pw <- conv2
+  Layer conv3_res <- pool1 | conv3_e_pw
+  Layer conv4_a_dw <- conv3_res
+  Layer conv4_b_pw <- conv4_a_dw
+  Layer conv4_c_dw <- conv4_b_pw
+  Layer conv4_d_pw <- conv4_c_dw
+  Layer pool2 <- conv4_d_pw
+  Layer conv4_e_pw <- conv3_res
+  Layer conv4_res <- pool2 | conv4_e_pw
+  Layer conv5_a_dw <- conv4_res
+  Layer conv5_b_pw <- conv5_a_dw
+  Layer conv5_c_dw <- conv5_b_pw
+  Layer conv5_d_pw <- conv5_c_dw
+  Layer pool3 <- conv5_d_pw
+  Layer conv5_e_pw <- conv4_res
+  Layer conv5_res <- pool3 | conv5_e_pw
+
+
+arch:
+mem_levels:3
+capacity:[64.0, 524288.0, 1073741824.0]
+access_cost:[0.1, 9, 200]
+static_cost:[0, 0, 0]
+parallel_count:[256, 1, 1]
+mac_capacity:0
+parallel_mode:[1, 0, 0]
+parallel_cost:[0.25]
+precision:8
+array_dim:None
+utilization_threshold:0.0
+replication:True
+invalid_underutilized:True
+memory_partitions:[[0, 0, 0], [0, 0, 0], [0, 0, 0], [None, None, None]]
+
+
+
+
+total DRAM access(MB): 
+6.094586372375488
+DRAM access breakdown[ifmap, ofmap, filter](MB):
+[2.6499805450439453, 2.181732177734375, 1.262873649597168]

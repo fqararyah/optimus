@@ -1,0 +1,67 @@
+Network: ResNet50_f24
+  Layer conv1 <- None
+  Layer pool1 <- conv1
+  Layer conv2_0_a <- pool1
+  Layer conv2_0_b <- conv2_0_a
+  Layer conv2_0_c <- conv2_0_b
+  Layer conv2_br <- pool1
+  Layer conv2_0_res <- conv2_br | conv2_0_c
+  Layer conv2_1_a <- conv2_0_res
+  Layer conv2_1_b <- conv2_1_a
+  Layer conv2_1_c <- conv2_1_b
+  Layer conv2_1_res <- conv2_0_res | conv2_1_c
+  Layer conv2_2_a <- conv2_1_res
+  Layer conv2_2_b <- conv2_2_a
+  Layer conv2_2_c <- conv2_2_b
+  Layer conv2_2_res <- conv2_1_res | conv2_2_c
+  Layer conv3_0_a <- conv2_2_res
+  Layer conv3_0_b <- conv3_0_a
+  Layer conv3_0_c <- conv3_0_b
+  Layer conv3_br <- conv2_2_res
+  Layer conv3_0_res <- conv3_br | conv3_0_c
+  Layer conv3_1_a <- conv3_0_res
+  Layer conv3_1_b <- conv3_1_a
+  Layer conv3_1_c <- conv3_1_b
+  Layer conv3_1_res <- conv3_0_res | conv3_1_c
+  Layer conv3_2_a <- conv3_1_res
+  Layer conv3_2_b <- conv3_2_a
+  Layer conv3_2_c <- conv3_2_b
+  Layer conv3_2_res <- conv3_1_res | conv3_2_c
+  Layer conv3_3_a <- conv3_2_res
+  Layer conv3_3_b <- conv3_3_a
+  Layer conv3_3_c <- conv3_3_b
+  Layer conv3_3_res <- conv3_2_res | conv3_3_c
+
+
+arch:
+mem_levels:3
+capacity:[64.0, 1048576.0, 1073741824.0]
+access_cost:[0.1, 9, 200]
+static_cost:[0, 0, 0]
+parallel_count:[256, 1, 1]
+mac_capacity:0
+parallel_mode:[1, 0, 0]
+parallel_cost:[0.25]
+precision:8
+array_dim:None
+utilization_threshold:0.0
+replication:True
+invalid_underutilized:True
+memory_partitions:[[0, 0, 0], [0, 0, 0], [0, 0, 0], [None, None, None]]
+
+
+
+
+total DRAM access(MB): 
+4.437282562255859
+DRAM access breakdown[ifmap, ofmap, filter](MB):
+[1.3876953125, 1.626953125, 1.4226341247558594]
+*********************fusion groups*********************
+['conv1', 'pool1', 'conv2_0_a']
+[01]
+['conv2_br', 'conv2_0_b', 'conv2_0_c', 'conv2_0_res', 'conv2_1_a', 'conv2_1_b', 'conv2_1_c', 'conv2_1_res', 'conv2_2_a', 'conv2_2_b', 'conv2_2_c', 'conv2_2_res', 'conv3_0_a']
+[423567891011121314]
+['conv3_br', 'conv3_0_b', 'conv3_0_c', 'conv3_0_res', 'conv3_1_a', 'conv3_1_b', 'conv3_1_c', 'conv3_1_res', 'conv3_2_a', 'conv3_2_b', 'conv3_2_c', 'conv3_2_res', 'conv3_3_a', 'conv3_3_b', 'conv3_3_c', 'conv3_3_res']
+[17151618192021222324252627282930]
+
+*********************fusion groups*********************

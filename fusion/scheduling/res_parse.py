@@ -6,7 +6,8 @@ from . import loop_enum as le
 
 
 def res_parse(schedule_info_list, resource, cost_model, sg, network,
-              loop_lower_bound, path, arch_info, others=False, is_access=False, is_print=True, print_groups = False):
+              loop_lower_bound, path, arch_info, others=False, is_access=False, is_print=True, print_groups = False,
+              wofusion = False):
 
     off_chip_overall = 0
     total_cost = 0
@@ -23,7 +24,8 @@ def res_parse(schedule_info_list, resource, cost_model, sg, network,
             fusion_group, loop_blocking_list, loop_ordering_list, off_chip_access_test, is_filter_fit = section_info
             cost_inner_list, point_list = sg.mapping(fusion_group, loop_blocking_list, loop_ordering_list)
 
-            access_list, levels_cost, noc_cost, ops, cost = cost_model.get_cost(point_list, fusion_group, is_filter_fit)
+            access_list, levels_cost, noc_cost, ops, cost = cost_model.get_cost(point_list, fusion_group, is_filter_fit,
+                                                                                wofusion)
 
             off_chip_access_breakdown, off_chip_access \
                 = access_list[2], math.ceil(reduce(add, access_list[2], 0))
@@ -56,7 +58,8 @@ def res_parse(schedule_info_list, resource, cost_model, sg, network,
             fusion_group, loop_blocking_list, loop_ordering_list, off_chip_access_test, is_filter_fit = section_info
             cost_inner_list, point_list = sg.mapping(fusion_group, loop_blocking_list, loop_ordering_list)
 
-            access_list, levels_cost, noc_cost, ops, cost = cost_model.get_cost(point_list, fusion_group, is_filter_fit)
+            access_list, levels_cost, noc_cost, ops, cost = cost_model.get_cost(point_list, fusion_group, is_filter_fit,
+                                                                                wofusion)
 
             num_levels = resource.buffer_levels()
 
@@ -72,7 +75,8 @@ def res_parse(schedule_info_list, resource, cost_model, sg, network,
             fusion_group, loop_blocking_list, loop_ordering_list, off_chip_access_test, is_filter_fit = section_info
             cost_inner_list, point_list = sg.mapping(fusion_group, loop_blocking_list, loop_ordering_list)
 
-            access_list, levels_cost, noc_cost, ops, cost = cost_model.get_cost(point_list, fusion_group, is_filter_fit)
+            access_list, levels_cost, noc_cost, ops, cost = cost_model.get_cost(point_list, fusion_group, is_filter_fit,
+                                                                                wofusion)
             total_cost += cost
 
             num_levels = resource.buffer_levels()
@@ -173,7 +177,8 @@ def res_parse(schedule_info_list, resource, cost_model, sg, network,
                 fusion_group, loop_blocking_list, loop_ordering_list, off_chip_access_test, is_filter_fit = section_info
                 cost_inner_list, point_list = sg.mapping(fusion_group, loop_blocking_list, loop_ordering_list)
 
-                access_list, levels_cost, noc_cost, ops, cost = cost_model.get_cost(point_list, fusion_group, is_filter_fit)
+                access_list, levels_cost, noc_cost, ops, cost = cost_model.get_cost(point_list, fusion_group, 
+                                                                                    is_filter_fit, wofusion)
                 total_cost += cost
 
                 num_levels = resource.buffer_levels()

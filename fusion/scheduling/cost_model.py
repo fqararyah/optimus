@@ -114,18 +114,18 @@ class CostModel(object):
 
         return [layer.total_ifmap_size, layer.total_ofmap_size, layer.total_filter_size]
 
-    def get_level_access(self, point_list, fusion_group, level, is_filter_fit=False):
+    def get_level_access(self, point_list, fusion_group, level, is_filter_fit=False, wofusion = False):
 
         if level == self.resource.buffer_levels() - 1 and len(fusion_group) > 1:
             buffer_access = \
                 self.get_level_access_multilayer(point_list, fusion_group, level, is_filter_fit)
         else:
             buffer_access = \
-                self.get_level_access_unilayer_and_innerlevel(point_list, fusion_group, level)
+                self.get_level_access_unilayer_and_innerlevel(point_list, fusion_group, level, wofusion)
 
         return buffer_access
 
-    def get_level_access_unilayer_and_innerlevel(self, point_list, fusion_group, level):
+    def get_level_access_unilayer_and_innerlevel(self, point_list, fusion_group, level, wofusion = False):
         """
         Get the energy from current level of memory access
         """
@@ -133,18 +133,50 @@ class CostModel(object):
         for point, layer_name in zip(point_list, fusion_group):
             layer = self.network[layer_name]
             if not isinstance(layer, ConvLayer):
-                continue
-            buffer_access_one_layer = self.get_level_access_unilayer(point, layer, level)
+                #print(len(self.network.nexts(layer_name)))
+                layer_num_of_children = len(self.network.nexts(layer_name))
+                layer_num_of_parents = len(self.network.prevs(layer_name))
+                ofmaps_size = layer.total_ofmap_size
+                ifmaps_size = layer.total_ifmap_size
+                ifmaps_access = 0
+                ofmaps_access = 0
+                if layer_num_of_children > 1 and \
+                    (level == 2 and 2 * layer.total_ofmap_size + layer.total_ifmap_size > self.resource.buffer(1).capacity):
+                    ofmaps_access = ofmaps_size
+                    #print(layer.total_ofmap_size, layer.total_ifmap_size, self.resource.buffer(1).capacity)
+                if layer_num_of_parents > 1 and \
+                    (level == 2 and 2 * layer.total_ifmap_size + layer.total_ofmap_size > self.resource.buffer(1).capacity):
+                    ifmaps_access = ifmaps_size
+                    #print(layer.total_ofmap_size, layer.total_ifmap_size, self.resource.buffer(1).capacity)
+                buffer_access_one_layer = [ifmaps_access,ofmaps_access,0]
+            else:
+                buffer_access_one_layer = self.get_level_access_unilayer(point, layer, level, wofusion)
             buffer_access = list(map(add, buffer_access_one_layer, buffer_access))
 
         return buffer_access
 
-    def get_level_access_unilayer(self, point, layer, level):
+    def get_level_access_unilayer(self, point, layer, level, wofusion = False):
         layer_size = self.get_layer_size(layer)
         mac_capacity = self.resource.mac_capacity
-
-        level_access = [self.get_if_access(level, point, layer, mac_capacity),
-                        2 * self.get_of_access(level, point, layer, mac_capacity) - 1,
+        if_access = 0
+        #print(len(self.network.nexts(layer)))
+        layer_num_of_children = len(self.network.nexts(layer))
+        ofms_copies = 1
+        if layer_num_of_children > 1:
+            ofms_copies = 2
+        if level != 2 or \
+              (level == 2 and ofms_copies * layer.total_ofmap_size + layer.total_ifmap_size > self.resource.buffer(1).capacity) or \
+            not wofusion:
+            #print(level, ofms_copies, layer.total_ofmap_size, layer.total_ifmap_size, self.resource.buffer(1).capacity)
+            if_access = self.get_if_access(level, point, layer, mac_capacity)
+        of_access = 0
+        if level != 2 or \
+            (level == 2 and ofms_copies * layer.total_ofmap_size + layer.total_ifmap_size > self.resource.buffer(1).capacity) or\
+                not wofusion:
+            #print(level, ofms_copies, layer.total_ofmap_size, layer.total_ifmap_size, self.resource.buffer(1).capacity)
+            of_access = 2 * self.get_of_access(level, point, layer, mac_capacity) - 1
+        level_access = [if_access,
+                        of_access,
                         self.get_fl_access(level, point, layer, mac_capacity)]
 
         buffer_access_one_layer = list(map(mul, level_access, layer_size))
@@ -271,7 +303,7 @@ class CostModel(object):
 
             return [buffer_access, [nearest_pe_cost]]
 
-    def get_access(self, point_list, fusion_group, is_filter_fit):
+    def get_access(self, point_list, fusion_group, is_filter_fit, wofusion = False):
 
         # TODO support more customized memory
         # TODO more access at overlapped boundary
@@ -280,14 +312,14 @@ class CostModel(object):
 
         access_list = []
         for level in range(num_levels):
-            buffer_access = self.get_level_access(point_list, fusion_group, level, is_filter_fit)
+            buffer_access = self.get_level_access(point_list, fusion_group, level, is_filter_fit, wofusion)
             access_list.append(buffer_access)
 
         return access_list
 
-    def get_cost(self, point_list, fusion_group, is_filter_fit):
+    def get_cost(self, point_list, fusion_group, is_filter_fit, wofusion = False):
 
-        access_list = self.get_access(point_list, fusion_group, is_filter_fit)
+        access_list = self.get_access(point_list, fusion_group, is_filter_fit, wofusion)
         num_levels = self.resource.buffer_levels()
 
         levels_cost = []

@@ -1,4 +1,4 @@
-Network: MobileNetV2
+Network: xce_r
   Layer conv1 <- None
   Layer conv2 <- conv1
   Layer conv3_a_dw <- conv2
@@ -113,6 +113,6 @@ memory_partitions:[[0, 0, 0], [0, 0, 0], [0, 0, 0], [None, None, None]]
 
 
 total DRAM access(MB): 
-65.54024982452393
+46.51035022735596
 DRAM access breakdown[ifmap, ofmap, filter](MB):
-[11.843451499938965, 11.6898193359375, 42.00697898864746]
+[11.640817642211914, 9.748260498046875, 25.121272087097168]

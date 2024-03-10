@@ -1,4 +1,4 @@
-Network: MobileNetV2
+Network: xce_r
   Layer conv1 <- None
   Layer conv2 <- conv1
   Layer conv3_a_dw <- conv2

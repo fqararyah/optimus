@@ -6,6 +6,7 @@ sys.path.append(os.path.abspath('../../'))
 
 import matplotlib.pyplot as plt
 import time
+import datetime
 from fusion.scheduling import batch_size
 from fusion.scheduling import Resource
 from fusion.scheduling import LoopLowerBound
@@ -13,7 +14,6 @@ from fusion.scheduling import ScheduleGenerator
 from fusion.scheduling import extract_info
 from fusion.scheduling import CostModel
 from fusion.scheduling import res_parse
-
 from fusion.nn_models import all_networks
 from fusion.nn_models import import_network
 
@@ -167,7 +167,7 @@ def do_scheduling_wofusion(network, buffers):
     """
     Get optimal scheduling for given problem. Return a result schedule.
     """
-
+    use_shiDianNao = False
     # Resource.
     arch_info, dataflow_info = extract_info(arch_file, dataflow_file)
     num_bytes = arch_info["precision"] / 8
@@ -194,13 +194,14 @@ def do_scheduling_wofusion(network, buffers):
 
         # optimal schedule
         sg = ScheduleGenerator(network, resource, cost_model,
-                               loop_lower_bound, wofusion=True)
+                               loop_lower_bound, wofusion=True, is_shiDianNao = use_shiDianNao)
         schedule_info_list, _ = sg.schedule_search()
         print("done!\n\n")
         _, access = res_parse(schedule_info_list, resource,
                               cost_model, sg, network,
                               loop_lower_bound,
-                              './result/buffer_size/woFusion', arch_info, True, is_access=True)
+                              './result/buffer_size/woFusion{}'.format('shi' if use_shiDianNao else ''), 
+                              arch_info, True, is_access=True, wofusion=True)
         access_list.append(access)
     x = [str(bf) for bf in buffers]
     access_list = [access / 1024 for access in access_list]
@@ -212,22 +213,22 @@ def main():
     Main function.
     """
     times = []
-    buffers = [256, 512, 1024]
+    buffers = [512]
+    dt_now = datetime.datetime.now()
+    dt_string = str(dt_now.year) + '_' + str(dt_now.month) + '_' + str(dt_now.day) + '_' + str(dt_now.hour) + '_' + str(dt_now.minute)
     for buffer in buffers:
         times.append('buffer_size::' + str(buffer))
         for net in all_networks():
-            plt.figure(figsize=(10, 4))
-            print('\n')
-            print("*" * 60)
-            print('HaFS:')
             batch_size.init(1)
             network = import_network(net)
             times.append(network.net_name)
+            print('\n')
+            print("*" * 60)
+            print('HaFS:')
             times.append('optimus')
             t1 = time.time()
             x, access_list = do_scheduling_optimus(network, [buffer])
             times.append(time.time() - t1)
-            plt.plot(x, access_list, label="HaFS")
             print('\n')
             print("*" * 60)
             print('Efficient-S:')
@@ -235,7 +236,6 @@ def main():
             t1=time.time()
             _, access_list = do_scheduling_efficients(network, [buffer])
             times.append(time.time() - t1)
-            plt.plot(x, access_list, label="Efficient-S")
             print('\n')
             print("*" * 60)
             times.append('DNNVM')
@@ -243,7 +243,6 @@ def main():
             t1 = time.time()
             _, access_list = do_scheduling_dnnvm(network, [buffer])
             times.append(time.time() - t1)
-            plt.plot(x, access_list, label="DNNVM")
             print('\n')
             print("*" * 60)
             print('w/o Fusion:')
@@ -251,16 +250,8 @@ def main():
             t1 = time.time()
             _, access_list = do_scheduling_wofusion(network, [buffer])
             times.append(time.time() - t1)
-            plt.plot(x, access_list, label="w/o Fusion")
-
-            plt.ylabel("DRAM access volume(GB)")
-            plt.xlabel("on-chip buffer size(KB)")
-            plt.ylim(0.0, 0.12)
-            plt.legend()
-            plt.savefig('./result/buffer_size/{}buffer_size.png'.format(network.net_name))
-            plt.show()
             
-    with open('./result/buffer_size/times.txt', 'w') as f:
+    with open('./result/buffer_size/times{}.txt'.format(dt_string), 'w') as f:
         for item in times:
             f.write(str(item) + '\n')
     return 0

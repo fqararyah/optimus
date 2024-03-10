@@ -241,7 +241,7 @@ class ScheduleGenerator(object):
 
         return cost, [loop_block], [loop_order], is_filter_fit
 
-    def _find_uni_layer_schedule_others(self, g, mode):
+    def _find_uni_layer_schedule_others(self, g, mode, wofusion = False):
         layer = self.network[g]
         cost, loop_block, loop_order, is_filter_fit = float('inf'), [None], [None], False
 
@@ -252,12 +252,27 @@ class ScheduleGenerator(object):
         level = self.resource.buffer_levels() - 2
         s = self.resource.buffer(level).capacity * self.resource.paras[level].count
         
+        is_filters_larger_than_fms = False
+        is_ifms_fit = False
+        is_ofms_fit = False
+        if layer.total_filter_size > layer.total_ifmap_size:
+            is_filters_larger_than_fms = True
         if s > layer.total_filter_size:
             is_filter_fit = True
+        if s > layer.total_ifmap_size:
+            is_ifms_fit = True
+        if s > layer.total_ofmap_size:
+            is_ofms_fit = True
 
         loop_lower_bound = self.loop_lower_bound(layer)
 
-        if self.is_shiDianNao:
+        if wofusion and (is_filters_larger_than_fms or is_ifms_fit or is_ofms_fit):
+            if mode == 0:
+                cost, loop_block, loop_order = _filterr_v1(layer, s, loop_lower_bound)
+            else:
+                cost, loop_block, loop_order, _, _ \
+                        = _ifms_ofms_fit_psumsr_v2(layer, self.resource, loop_lower_bound, is_ifms_fit, is_ofms_fit)
+        elif self.is_shiDianNao or is_filters_larger_than_fms:
             if mode == 0:
                 cost, loop_block, loop_order = _filterr_v1(layer, s, loop_lower_bound)
             else:
@@ -274,7 +289,7 @@ class ScheduleGenerator(object):
 
     def _find_uni_layer_schedule(self, g, mode=0):
         if self.d_fusion or self.z_fusion or self.wofusion:
-            return self._find_uni_layer_schedule_others(g, mode)
+            return self._find_uni_layer_schedule_others(g, mode, self.wofusion)
         else:
             return self._find_uni_layer_schedule_optimus(g)
 
@@ -654,6 +669,65 @@ def _filterr_v2(layer, resource, loop_lower_bound):
 
     return q, loop_block, loop_order, glb_access_cost, dram_access_cost
 
+def _ifms_ofms_fit_psumsr_v2(layer, resource, loop_lower_bound, is_ifms_fit, is_ofms_fit):
+    irrelevant = [le.W, le.H, le.B]
+
+    p2 = resource.access_cost[2]
+    p1 = resource.access_cost[1]
+    r = layer.hfil
+    d = layer.wfil
+    q0 = (p2[0] + p1[0]) * layer.hstd * layer.wstd / (r * d)
+    q1 = 2 * (p2[1] + p1[1]) / (r * d)
+    q2 = p1[2]
+    s = resource.buffer(1).capacity
+
+    bhw_lower_bound = loop_lower_bound.b * loop_lower_bound.h * loop_lower_bound.w
+    bhw_upper_bound = layer.nimg * layer.hofm * layer.wofm
+    args = (q0, q1, q2)
+    cons_args = (loop_lower_bound.k, layer.nofm,
+                 loop_lower_bound.c, layer.nifm,
+                 bhw_lower_bound, bhw_upper_bound,
+                 r*d, 1, layer.hstd*layer.wstd, s)
+    # constrain
+    cons = con(cons_args)
+
+    # init
+    q = min([q0, q1, q2])/2
+    x0 = np.asarray((q0/q, q1/q, q2/q))
+
+    # optimize
+    res = minimize(fun(args), x0, method='SLSQP', constraints=cons)
+
+    k, c, bhw = res.x
+    k, c, bhw = math.floor(k), math.floor(c), math.floor(bhw)
+    bhw, b, h, w = _bhw_factorization(layer, bhw, loop_lower_bound)
+    loop_block = [d, r, c, w, h, k, b]
+    loop_order = [le.NUM - 1] * le.NUM
+    if not res.success or any(i <= 0 for i in loop_block):
+        return float('inf'), loop_block, loop_order, \
+               [float('inf'), float('inf'), float('inf')], [float('inf'), float('inf'), float('inf')]
+    else:
+        loop_order = loop_order_generator(layer, loop_block, irrelevant)
+
+    q = (q0 / k + q1 / c + q2 / bhw) * layer.total_ops + p2[2] * layer.total_filter_size \
+        - (p2[1] + p1[1]) * layer.total_ofmap_size
+
+    if_glb_access_cost = p1[0] * layer.hstd * layer.wstd * layer.total_ops / (r * d * k)
+    of_glb_access_cost = 2 * p1[1] * layer.total_ops / (r * d * c) - p1[1] * layer.total_ofmap_size
+    fi_glb_access_cost = p1[2] * layer.total_ops / bhw
+    if is_ifms_fit:
+        if_dram_access_cost = 0
+    else:
+        if_dram_access_cost = p2[0] * layer.hstd * layer.wstd * layer.total_ops / (r * d * k)
+    if is_ifms_fit and is_ofms_fit:
+        of_dram_access_cost = 0
+    else:
+        of_dram_access_cost = p2[1] * layer.total_ofmap_size
+    fi_dram_access_cost = p2[2] * layer.total_filter_size
+    glb_access_cost = [if_glb_access_cost, of_glb_access_cost, fi_glb_access_cost]
+    dram_access_cost = [if_dram_access_cost, of_dram_access_cost, fi_dram_access_cost]
+
+    return q, loop_block, loop_order, glb_access_cost, dram_access_cost
 
 def _ifmapr_v2(layer, resource, loop_lower_bound):
     # irrelevant loop: k

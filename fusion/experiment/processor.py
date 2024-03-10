@@ -88,7 +88,7 @@ def do_scheduling_woFusion(arch_file, dataflow_file, store_path, is_shiDianNao=F
         _, access = res_parse(schedule_info_list, resource,
                               cost_model, sg, network,
                               loop_lower_bound,
-                              store_path, arch_info, True, is_access=True, is_print=False)
+                              store_path, arch_info, True, is_access=True, is_print=False, , wofusion=True)
         access_list.append(access)
     return access_list
 

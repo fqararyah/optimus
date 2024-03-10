@@ -90,7 +90,7 @@ def do_scheduling_woMinCost():
         _, access = res_parse(schedule_info_list, resource,
                                    cost_model, sg, network,
                                    loop_lower_bound,
-                                   './result/analysis/woMinCost', arch_info, True, is_access=True)
+                                   './result/analysis/woMinCost', arch_info, True, is_access=True, wofusion=True)
 
         access_list.append(int(access))
 
@@ -127,7 +127,7 @@ def do_scheduling_woFullSpace1():
         _, access = res_parse(schedule_info_list, resource,
                               cost_model, sg, network,
                               loop_lower_bound,
-                              './result/analysis/woFullSpace1', arch_info, True, is_access=True)
+                              './result/analysis/woFullSpace1', arch_info, True, is_access=True, wofusion=True)
 
         access_list.append(int(access))
 
@@ -164,7 +164,7 @@ def do_scheduling_woFullSpace2():
         _, access = res_parse(schedule_info_list, resource,
                               cost_model, sg, network,
                               loop_lower_bound,
-                              './result/analysis/woFullSpace2', arch_info, True, is_access=True)
+                              './result/analysis/woFullSpace2', arch_info, True, is_access=True, wofusion=True)
 
         access_list.append(int(access))
 
@@ -201,7 +201,7 @@ def do_scheduling_woFusion():
         _, access = res_parse(schedule_info_list, resource,
                               cost_model, sg, network,
                               loop_lower_bound,
-                              './result/analysis/woFusion', arch_info, True, is_access=True)
+                              './result/analysis/woFusion', arch_info, True, is_access=True, wofusion=True)
         access_list.append(int(access))
 
     return access_list

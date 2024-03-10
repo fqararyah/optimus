@@ -1,0 +1,35 @@
+Network: MobileNet_f9
+  Layer conv1 <- None
+  Layer conv2_1_dw <- conv1
+  Layer conv2_1_pw <- conv2_1_dw
+  Layer conv2_2_dw <- conv2_1_pw
+  Layer conv2_2_pw <- conv2_2_dw
+  Layer conv3_1_dw <- conv2_2_pw
+  Layer conv3_1_pw <- conv3_1_dw
+  Layer conv3_2_dw <- conv3_1_pw
+  Layer conv3_2_pw <- conv3_2_dw
+
+
+arch:
+mem_levels:3
+capacity:[64.0, 1048576.0, 1073741824.0]
+access_cost:[0.1, 9, 200]
+static_cost:[0, 0, 0]
+parallel_count:[256, 1, 1]
+mac_capacity:0
+parallel_mode:[1, 0, 0]
+parallel_cost:[0.25]
+precision:8
+array_dim:None
+utilization_threshold:0.0
+replication:True
+invalid_underutilized:True
+memory_partitions:[[0, 0, 0], [0, 0, 0], [0, 0, 0], [None, None, None]]
+
+
+
+
+total DRAM access(MB): 
+0.392425537109375
+DRAM access breakdown[ifmap, ofmap, filter](MB):
+[0.1435546875, 0.19140625, 0.057464599609375]

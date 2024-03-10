@@ -50,6 +50,6 @@ memory_partitions:[[0, 0, 0], [0, 0, 0], [0, 0, 0], [None, None, None]]
 
 
 total DRAM access(MB): 
-8.927887916564941
+6.986175537109375
 DRAM access breakdown[ifmap, ofmap, filter](MB):
-[1.98681640625, 2.9677505493164062, 3.973320960998535]
+[1.1005859375, 1.9140625, 3.971527099609375]

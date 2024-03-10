@@ -144,7 +144,7 @@ def do_scheduling_wofusion():
         res_parse(schedule_info_list, resource,
                   cost_model, sg, network,
                   loop_lower_bound,
-                  './result/overall_experiment/woFusion', arch_info, True)
+                  './result/overall_experiment/woFusion', arch_info, True, , wofusion=True)
 
 def main():
     """

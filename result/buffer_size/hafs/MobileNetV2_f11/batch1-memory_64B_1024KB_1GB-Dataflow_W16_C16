@@ -1,0 +1,45 @@
+Network: MobileNetV2_f11
+  Layer conv1 <- None
+  Layer conv2_a_dw <- conv1
+  Layer conv2_b_pw <- conv2_a_dw
+  Layer conv3_a_pw <- conv2_b_pw
+  Layer conv3_b_dw <- conv3_a_pw
+  Layer conv3_c_pw <- conv3_b_dw
+  Layer conv4_a_pw <- conv3_c_pw
+  Layer conv4_b_dw <- conv4_a_pw
+  Layer conv4_c_pw <- conv4_b_dw
+  Layer conv4_res <- conv3_c_pw | conv4_c_pw
+  Layer conv5_a_pw <- conv4_res
+  Layer conv5_b_dw <- conv5_a_pw
+
+
+arch:
+mem_levels:3
+capacity:[64.0, 1048576.0, 1073741824.0]
+access_cost:[0.1, 9, 200]
+static_cost:[0, 0, 0]
+parallel_count:[256, 1, 1]
+mac_capacity:0
+parallel_mode:[1, 0, 0]
+parallel_cost:[0.25]
+precision:8
+array_dim:None
+utilization_threshold:0.0
+replication:True
+invalid_underutilized:True
+memory_partitions:[[0, 0, 0], [0, 0, 0], [0, 0, 0], [None, None, None]]
+
+
+
+
+total DRAM access(MB): 
+0.230194091796875
+DRAM access breakdown[ifmap, ofmap, filter](MB):
+[0.1435546875, 0.07177734375, 0.014862060546875]
+*********************fusion groups*********************
+['conv1', 'conv2_a_dw', 'conv2_b_pw', 'conv3_a_pw', 'conv3_b_dw', 'conv3_c_pw', 'conv4_a_pw', 'conv4_b_dw', 'conv4_c_pw', 'conv4_res', 'conv5_a_pw']
+[012345678910]
+['conv5_b_dw']
+[11]
+
+*********************fusion groups*********************
